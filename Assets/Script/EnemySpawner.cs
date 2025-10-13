@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public float edgePadding = 20f;
     public GameObject enemyPrefab;
     public RectTransform spawnArea;
     public float bpm = 120f;
@@ -31,10 +32,10 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        Vector2 randomPos = new Vector2(
-            Random.Range(spawnArea.rect.xMin, spawnArea.rect.xMax),
-            Random.Range(spawnArea.rect.yMin, spawnArea.rect.yMax)
-        );
+    Vector2 randomPos = new Vector2(
+    Random.Range(spawnArea.rect.xMin + edgePadding, spawnArea.rect.xMax - edgePadding),
+    Random.Range(spawnArea.rect.yMin + edgePadding, spawnArea.rect.yMax - edgePadding));
+
 
         GameObject newEnemy = Instantiate(enemyPrefab, spawnArea);
         newEnemy.GetComponent<RectTransform>().anchoredPosition = randomPos;
