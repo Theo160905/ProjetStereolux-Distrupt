@@ -6,7 +6,14 @@ public class Enemy : MonoBehaviour
     private float timer;
     private bool isAlive = true;
 
+    [SerializeField] Contamination contamination;
+
     public System.Action<Enemy> OnDestroyed;
+
+    void Start()
+    {
+        contamination = FindFirstObjectByType<Contamination>();
+    }
 
     void Update()
     {
@@ -15,6 +22,8 @@ public class Enemy : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= lifespan)
         {
+            contamination.IncreaseContamination(contamination.contaminationRate);
+            Debug.Log("Contamination increased to: " + contamination.GetCurrentContamination());
             Destroy(gameObject);
         }
     }

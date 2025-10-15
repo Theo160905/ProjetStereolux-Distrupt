@@ -9,6 +9,8 @@ public class EnemySpawner : MonoBehaviour
     public float bpm = 120f;
     public int maxEnemiesToSpawn = 30;
 
+    [SerializeField] Contamination contamination;
+
     private float beatInterval;
     private float timer;
     private int enemiesSpawned = 0;
@@ -20,6 +22,7 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
+        contamination.SetContamination(maxEnemiesToSpawn, enemyPrefab.GetComponent<Enemy>().lifespan);
         beatInterval = 60f / bpm;
     }
 
@@ -58,7 +61,7 @@ public class EnemySpawner : MonoBehaviour
         activeEnemies.Remove(enemy);
         enemiesDestroyed++;
         Debug.Log("Ennemi détruit. Total détruits: " + enemiesDestroyed);
-        if (enemiesDestroyed >= maxEnemiesToSpawn * 0.5f)
+        if (enemiesDestroyed >= maxEnemiesToSpawn * 0.8f && enemiesSpawned == maxEnemiesToSpawn)
         {
             Debug.Log("50% des ennemis ont été détruits.");
             OnAllEnemiesCleared?.Invoke();

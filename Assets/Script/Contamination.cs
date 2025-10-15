@@ -23,4 +23,22 @@ public class Contamination : MonoBehaviour
         if (currentContamination > maxContamination)
             currentContamination = maxContamination;
     }
+
+    public void DecreaseContamination(float amount)
+    {
+        currentContamination -= amount;
+        if (currentContamination < 0f)
+            currentContamination = 0f;
+    }
+
+    public void ResetContamination()
+    {
+        currentContamination = 0f;
+    }
+
+    public float SetContamination(float nbEnemies, float lifetime)
+    {
+        contaminationRate = (100 / nbEnemies);
+        return contaminationRate;
+    }
 }
