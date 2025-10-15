@@ -14,6 +14,8 @@ public class EnemySpawner : MonoBehaviour
     private int enemiesSpawned = 0;
     private List<Enemy> activeEnemies = new List<Enemy>();
 
+    int enemiesDestroyed = 0;
+
     public System.Action OnAllEnemiesCleared;
 
     void Start()
@@ -49,19 +51,18 @@ public class EnemySpawner : MonoBehaviour
         activeEnemies.Add(enemy);
 
         enemiesSpawned++;
-        Debug.Log("Ennemi spwan " + enemiesSpawned);
-        Debug.Log("Ennemi actif " + activeEnemies.Count);
     }
 
     void HandleEnemyDestroyed(Enemy enemy)
     {
         activeEnemies.Remove(enemy);
-        
-        // Vérifie si tous les ennemis ont été spawnés ET détruits
-        if (activeEnemies.Count == 0 && enemiesSpawned >= maxEnemiesToSpawn)
+        enemiesDestroyed++;
+        Debug.Log("Ennemi détruit. Total détruits: " + enemiesDestroyed);
+        if (enemiesDestroyed >= maxEnemiesToSpawn * 0.5f)
         {
-            Debug.Log("Tous les ennemis ont été spawnés et détruits.");
-            OnAllEnemiesCleared?.Invoke(); // Optionnel : notifier d'autres systèmes
+            Debug.Log("50% des ennemis ont été détruits.");
+            OnAllEnemiesCleared?.Invoke();
         }
     }
+
 }
