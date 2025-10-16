@@ -10,9 +10,24 @@ public class Enemy : MonoBehaviour
 
     public System.Action<Enemy> OnDestroyed;
 
+    public GameObject CoruptionPrefab; 
+    private GameObject corruptionInstance;
+
     void Start()
     {
         contamination = FindFirstObjectByType<Contamination>();
+        GameObject Canva = GameObject.FindWithTag("Canvas");
+        if (Canva != null)
+        {
+            corruptionInstance = Instantiate(CoruptionPrefab, Canva.transform);
+            corruptionInstance.transform.position = gameObject.transform.position;
+        }
+        else
+        {
+            Debug.LogWarning("Canvas with tag 'Canvas' not found. Instantiating corruption without parent.");
+            corruptionInstance = Instantiate(CoruptionPrefab);
+            corruptionInstance.transform.position = gameObject.transform.position;
+        }
     }
 
     void Update()
@@ -33,6 +48,7 @@ public class Enemy : MonoBehaviour
         if (!isAlive) return;
         isAlive = false;
         OnDestroyed?.Invoke(this);
+        Destroy(corruptionInstance);
         Destroy(gameObject);
     }
 

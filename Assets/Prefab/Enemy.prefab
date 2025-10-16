@@ -146,3 +146,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
   lifespan: 2
+  contamination: {fileID: 0}
+  CoruptionPrefab: {fileID: 5223486099816588446, guid: ab936d21b47caa24eb03e6b90ab38004, type: 3}
