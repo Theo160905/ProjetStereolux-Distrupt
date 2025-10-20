@@ -60,10 +60,10 @@ public class EnemySpawner : MonoBehaviour
     {
         activeEnemies.Remove(enemy);
         enemiesDestroyed++;
-        Debug.Log("Ennemi détruit. Total détruits: " + enemiesDestroyed);
+        
         if (enemiesDestroyed >= maxEnemiesToSpawn * 0.8f && enemiesSpawned == maxEnemiesToSpawn)
         {
-            Debug.Log("50% des ennemis ont été détruits.");
+            Debug.Log("Score" + enemiesDestroyed + "/" + maxEnemiesToSpawn);
             OnAllEnemiesCleared?.Invoke();
         }
     }
