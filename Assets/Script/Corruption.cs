@@ -2,16 +2,23 @@ using UnityEngine;
 
 public class Corruption : MonoBehaviour
 {
+    private float duration = 5f;
+    private float elapsedTime = 0f;
+    private Vector3 startScale = Vector3.zero;
+    private Vector3 targetScale = new Vector3(1f, 1f, 0f);
+
     void Start()
     {
-        gameObject.transform.localScale = new Vector3(0f, 0f, 0f);
+        transform.localScale = startScale;
     }
 
     void Update()
     {
-        if (gameObject.transform.localScale.x < 1f)
+        if (elapsedTime < duration)
         {
-            gameObject.transform.localScale += new Vector3(0.01f, 0.01f, 0f);
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
         }
     }
 }
