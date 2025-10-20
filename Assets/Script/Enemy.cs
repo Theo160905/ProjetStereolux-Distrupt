@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class Enemy : MonoBehaviour
 {
+    [Range(0.0f, 5.0f)]
+    public float TimeToBeInteractable = 2f;
+
     public float lifespan = 7f;
     private float timer;
     private bool isAlive = true;
@@ -22,18 +25,16 @@ public class Enemy : MonoBehaviour
     {
         contamination = FindFirstObjectByType<Contamination>();
 
-        // Initialisation du bouton
         enemyButton = GetComponent<Button>();
         buttonImage = GetComponent<Image>();
 
         if (enemyButton != null)
         {
-            enemyButton.interactable = false; // Désactive l’interaction pendant 2 sec
+            enemyButton.interactable = false;
             originalColor = buttonImage.color;
-            Invoke(nameof(EnableInteraction), 2f); // Appelle EnableInteraction dans 2 sec
+            Invoke(nameof(EnableInteraction), TimeToBeInteractable);
         }
 
-        // Instantiate corruption object
         GameObject Canva = GameObject.FindWithTag("Corruption");
         if (Canva != null)
         {
