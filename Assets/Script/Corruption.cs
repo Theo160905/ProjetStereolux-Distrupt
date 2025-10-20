@@ -9,16 +9,17 @@ public class Corruption : MonoBehaviour
 
     void Start()
     {
-        transform.localScale = startScale;
+        // transform.localScale = startScale;
+        transform.localScale = targetScale;
     }
 
     void Update()
     {
-        if (elapsedTime < duration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / duration);
-            transform.localScale = Vector3.Lerp(startScale, targetScale, t);
-        }
+        // if (elapsedTime < duration)
+        // {
+        //     elapsedTime += Time.deltaTime;
+        //     float t = Mathf.Clamp01(elapsedTime / duration);
+        //     transform.localScale = Vector3.Lerp(startScale, targetScale, t);
+        // }
     }
 }
