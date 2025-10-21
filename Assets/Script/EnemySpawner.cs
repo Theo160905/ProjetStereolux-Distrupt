@@ -9,6 +9,9 @@ public class EnemySpawner : MonoBehaviour
     public float bpm = 120f;
     public int maxEnemiesToSpawn = 30;
 
+    [Tooltip("Distance minimale entre chaque ennemi en unités UI")]
+    public float minDistanceBetweenEnemies = 50f;
+
     [SerializeField] Contamination contamination;
 
     private float beatInterval;
@@ -41,13 +44,28 @@ public class EnemySpawner : MonoBehaviour
 
     void SpawnEnemy()
     {
-        Vector2 randomPos = new Vector2(
-            Random.Range(spawnArea.rect.xMin + edgePadding, spawnArea.rect.xMax - edgePadding),
-            Random.Range(spawnArea.rect.yMin + edgePadding, spawnArea.rect.yMax - edgePadding)
-        );
+        Vector2 spawnPos;
+        int attempts = 0;
+        const int maxAttempts = 10; // pour éviter une boucle infinie
+
+        do
+        {
+            spawnPos = new Vector2(
+                Random.Range(spawnArea.rect.xMin + edgePadding, spawnArea.rect.xMax - edgePadding),
+                Random.Range(spawnArea.rect.yMin + edgePadding, spawnArea.rect.yMax - edgePadding)
+            );
+            attempts++;
+        }
+        while (!IsPositionValid(spawnPos) && attempts < maxAttempts);
+
+        if (attempts >= maxAttempts)
+        {
+            Debug.LogWarning("Impossible de trouver une position valide pour l'ennemi après plusieurs tentatives.");
+            return;
+        }
 
         GameObject newEnemy = Instantiate(enemyPrefab, spawnArea);
-        newEnemy.GetComponent<RectTransform>().anchoredPosition = randomPos;
+        newEnemy.GetComponent<RectTransform>().anchoredPosition = spawnPos;
 
         Enemy enemy = newEnemy.GetComponent<Enemy>();
         enemy.OnDestroyed += HandleEnemyDestroyed;
@@ -56,16 +74,32 @@ public class EnemySpawner : MonoBehaviour
         enemiesSpawned++;
     }
 
+    bool IsPositionValid(Vector2 newPosition)
+    {
+        foreach (Enemy existingEnemy in activeEnemies)
+        {
+            if (existingEnemy == null) continue;
+
+            RectTransform rt = existingEnemy.GetComponent<RectTransform>();
+            if (rt == null) continue;
+
+            if (Vector2.Distance(rt.anchoredPosition, newPosition) < minDistanceBetweenEnemies)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     void HandleEnemyDestroyed(Enemy enemy)
     {
         activeEnemies.Remove(enemy);
         enemiesDestroyed++;
-        
+
         if (enemiesDestroyed >= maxEnemiesToSpawn * 0.8f && enemiesSpawned == maxEnemiesToSpawn)
         {
-            Debug.Log("Score" + enemiesDestroyed + "/" + maxEnemiesToSpawn);
+            Debug.Log("Score " + enemiesDestroyed + "/" + maxEnemiesToSpawn);
             OnAllEnemiesCleared?.Invoke();
         }
     }
-
 }

@@ -14,14 +14,18 @@ public class Enemy : MonoBehaviour
 
     public System.Action<Enemy> OnDestroyed;
 
-    public GameObject CoruptionPrefab; 
+    public GameObject CoruptionPrefab;
     private GameObject corruptionInstance;
 
     private Button enemyButton;
     private Image buttonImage;
-    private Color originalColor;
 
     void Start()
+    {
+        InitializeEnemy();
+    }
+
+    void InitializeEnemy()
     {
         contamination = FindFirstObjectByType<Contamination>();
 
@@ -31,22 +35,26 @@ public class Enemy : MonoBehaviour
         if (enemyButton != null)
         {
             enemyButton.interactable = false;
-            originalColor = buttonImage.color;
             Invoke(nameof(EnableInteraction), TimeToBeInteractable);
         }
 
-        GameObject Canva = GameObject.FindWithTag("Corruption");
-        if (Canva != null)
+        GameObject Parent = GameObject.FindWithTag("Corruption");
+        if (Parent  != null && corruptionInstance == null)
         {
-            corruptionInstance = Instantiate(CoruptionPrefab, Canva.transform);
-            corruptionInstance.transform.position = transform.position;
+            corruptionInstance = Instantiate(CoruptionPrefab, Parent .transform);
         }
-        else
+        else if (corruptionInstance == null)
         {
-            Debug.LogWarning("Canvas with tag 'Canvas' not found. Instantiating corruption without parent.");
             corruptionInstance = Instantiate(CoruptionPrefab);
+        }
+
+        if (corruptionInstance != null)
+        {
             corruptionInstance.transform.position = transform.position;
         }
+
+        timer = 0f;
+        isAlive = true;
     }
 
     void EnableInteraction()
@@ -68,21 +76,37 @@ public class Enemy : MonoBehaviour
         if (timer >= lifespan)
         {
             contamination.IncreaseContamination(contamination.contaminationRate);
-            Destroy(gameObject);
+            ResetEnemy();
         }
     }
 
     public void OnTap()
     {
         if (!isAlive) return;
+
         isAlive = false;
         OnDestroyed?.Invoke(this);
-        Destroy(corruptionInstance);
-        Destroy(gameObject);
+
+        if (corruptionInstance != null)
+        {
+            Destroy(corruptionInstance);
+            Destroy(gameObject);
+        }
+            
+
     }
 
-    void Respawn()
+    void ResetEnemy()
     {
-        timer = 0f;
+        gameObject.SetActive(false);
+
+        Invoke(nameof(ReloadEnemy), 1f);
+    }
+
+    void ReloadEnemy()
+    {
+        gameObject.SetActive(true);
+
+        InitializeEnemy();
     }
 }
