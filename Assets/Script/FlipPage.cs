@@ -3,14 +3,14 @@ using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 
 // Alias EnhancedTouch.Touch to "Touch" for less typing.
-using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
-using TouchPhase = UnityEngine.InputSystem.TouchPhase;
+//using Touch = UnityEngine.InputSystem.EnhancedTouch.Touch;
+//using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 public class FlipPage : MonoBehaviour
 {
     //[SerializeField] private PlayerInput _playerInput;
     //private InputAction _touchAction;
-    [SerializeField] private MeshRenderer _WhereToPutTexture1;
+    [SerializeField] private MeshRenderer _WhereToPutTexture;
     private Texture2D _tex2D;
     //[SerializeField] private Camera _nextCamera;
     public Animator animator;
@@ -22,9 +22,9 @@ public class FlipPage : MonoBehaviour
     [Tooltip ("To know if the player finished the level.")]public bool IsLevelFinished;
     [Tooltip("To know wich level we are in.")] public int WichCurrentLevel;
 
-    //public bool DidLevelEnd = false;
-    private Vector2 _startTouchPosition;
-    private Vector2 _endTouchPosition;
+    
+    //private Vector2 _startTouchPosition;
+    //private Vector2 _endTouchPosition;
 
     public bool AnimatorIsPlaying()
     {
@@ -54,6 +54,7 @@ public class FlipPage : MonoBehaviour
 
     void Update()
     {
+        /*
         foreach (var touch in Touch.activeTouches)
         {
             switch (touch.phase)
@@ -86,6 +87,7 @@ public class FlipPage : MonoBehaviour
                     break;
             }
         }
+        */
     }
 
     public void PlayAnimation(string animationName)
@@ -102,8 +104,8 @@ public class FlipPage : MonoBehaviour
             _tex2D = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
             _tex2D.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0, false);
             _tex2D.Apply();
-            _WhereToPutTexture1.material.mainTexture = _tex2D;
-            _WhereToPutTexture1.gameObject.SetActive(true);
+            _WhereToPutTexture.material.mainTexture = _tex2D;
+            //_WhereToPutTexture.gameObject.SetActive(true);
         }
     }
 

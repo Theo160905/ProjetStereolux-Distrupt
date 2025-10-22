@@ -596,6 +596,58 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &433498891
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 433498892}
+  - component: {fileID: 433498893}
+  m_Layer: 0
+  m_Name: ChangingLevelsScripts
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &433498892
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433498891}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &433498893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 433498891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c488a8caf20b754886ce7a5851e5060, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ChangingLevel
+  _flipPage: {fileID: 1037375907}
+  _falsePage: {fileID: 331493514}
+  animator: {fileID: 1588976846}
+  _wichAnimationToPlay: Left
+  _currentLevelToUnLoad: {fileID: 0}
+  _nextLevelToLoad: {fileID: 0}
+  _isLevelFinished: 0
+  WichCurrentLevel: 0
 --- !u!1 &442145750
 GameObject:
   m_ObjectHideFlags: 0
@@ -800,7 +852,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1292593403}
         m_TargetAssemblyTypeName: StartButton, Assembly-CSharp
-        m_MethodName: StartGame
+        m_MethodName: PlayCoroutine
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1082,7 +1134,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1037375908}
   - component: {fileID: 1037375907}
-  - component: {fileID: 1037375909}
   m_Layer: 0
   m_Name: FlipPageScript
   m_TagString: Untagged
@@ -1102,11 +1153,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bda32db6c43b33b4ea90020772ed7c78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlipPage
-  _WhereToPutTexture1: {fileID: 331493516}
+  _WhereToPutTexture: {fileID: 331493516}
   animator: {fileID: 1588976846}
   _wichAnimationToPlay: Left
   _currentLevelToUnLoad: {fileID: 0}
   _nextLevelToLoad: {fileID: 0}
+  CodeIsDone: 0
   IsLevelFinished: 0
   WichCurrentLevel: 0
 --- !u!4 &1037375908
@@ -1124,36 +1176,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1037375909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1037375906}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.InputSystem::UnityEngine.InputSystem.PlayerInput
-  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  m_NotificationBehavior: 0
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Touch
-  m_DefaultActionMap: 
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
 --- !u!1 &1113928007
 GameObject:
   m_ObjectHideFlags: 0
@@ -1215,7 +1237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e214e546999a1489c91369661ea4c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StartButton
-  _WhereToPutTexture1: {fileID: 331493516}
+  _falsePage: {fileID: 331493514}
   _wichAnimationToPlay: Left
   _rootMenuGame: {fileID: 1113928007}
   _nextLevelToLoad: {fileID: 1403620845}
@@ -1695,4 +1717,5 @@ SceneRoots:
   - {fileID: 1858941260}
   - {fileID: 1037375908}
   - {fileID: 1292593404}
+  - {fileID: 433498892}
   - {fileID: 1588976845}
