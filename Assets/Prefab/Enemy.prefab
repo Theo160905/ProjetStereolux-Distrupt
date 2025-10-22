@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 069f70b071b30fd44802c304e750d8d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  mySliderFloat: 2.4
   lifespan: 5
   contamination: {fileID: 0}
   CoruptionPrefab: {fileID: 5223486099816588446, guid: ab936d21b47caa24eb03e6b90ab38004, type: 3}

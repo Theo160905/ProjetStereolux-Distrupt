@@ -709,11 +709,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c032c8bb14d642141941db72370ee309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  edgePadding: 40
+  edgePadding: 100
   enemyPrefab: {fileID: 1104571477614089414, guid: 54bf096c75c7bc04fb8817e7003588b0, type: 3}
   spawnArea: {fileID: 920267993}
   bpm: 60
   maxEnemiesToSpawn: 30
+  minDistanceBetweenEnemies: 50
   contamination: {fileID: 854577515}
 --- !u!1 &1475339884
 GameObject:
