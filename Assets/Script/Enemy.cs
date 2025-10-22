@@ -1,5 +1,8 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
+using UnityEngine.VFX;
 
 public class Enemy : MonoBehaviour
 {
@@ -7,18 +10,21 @@ public class Enemy : MonoBehaviour
     public float TimeToBeInteractable = 2f;
 
     public float lifespan = 7f;
-    private float timer;
-    private bool isAlive = true;
-
-    [SerializeField] Contamination contamination;
 
     public System.Action<Enemy> OnDestroyed;
 
-    public GameObject CoruptionPrefab;
-    private GameObject corruptionInstance;
+    public GameObject corruptionInstance;
 
+    private float timer;
+    private bool isAlive = true;
     private Button enemyButton;
     private Image buttonImage;
+
+    [Header("VFX")]
+    public VisualEffect SpawnVFX;
+    public VisualEffect DespawnVFX;
+    public VisualEffect HitVFX;
+    
 
     void Start()
     {
@@ -27,8 +33,6 @@ public class Enemy : MonoBehaviour
 
     void InitializeEnemy()
     {
-        contamination = FindFirstObjectByType<Contamination>();
-
         enemyButton = GetComponent<Button>();
         buttonImage = GetComponent<Image>();
 
@@ -36,16 +40,6 @@ public class Enemy : MonoBehaviour
         {
             enemyButton.interactable = false;
             Invoke(nameof(EnableInteraction), TimeToBeInteractable);
-        }
-
-        GameObject Parent = GameObject.FindWithTag("Corruption");
-        if (Parent  != null && corruptionInstance == null)
-        {
-            corruptionInstance = Instantiate(CoruptionPrefab, Parent .transform);
-        }
-        else if (corruptionInstance == null)
-        {
-            corruptionInstance = Instantiate(CoruptionPrefab);
         }
 
         if (corruptionInstance != null)
@@ -62,6 +56,7 @@ public class Enemy : MonoBehaviour
         if (enemyButton != null)
         {
             enemyButton.interactable = true;
+            StartCoroutine(WaitUnitilVFXComplete(SpawnVFX));
 
             if (buttonImage != null)
                 buttonImage.color = new Color(0.5f, 0.75f, 1f);
@@ -75,7 +70,7 @@ public class Enemy : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= lifespan)
         {
-            contamination.IncreaseContamination(contamination.contaminationRate);
+            StartCoroutine(WaitUnitilVFXComplete(DespawnVFX));
             ResetEnemy();
         }
     }
@@ -89,8 +84,10 @@ public class Enemy : MonoBehaviour
 
         if (corruptionInstance != null)
         {
+            StartCoroutine(WaitUnitilVFXComplete(HitVFX));
             Destroy(corruptionInstance);
             Destroy(gameObject);
+            Destroy(gameObject.transform.parent.gameObject);
         }
             
 
@@ -98,7 +95,7 @@ public class Enemy : MonoBehaviour
 
     void ResetEnemy()
     {
-        gameObject.SetActive(false);
+        StartCoroutine(WaitUnitilVFXComplete(DespawnVFX));
 
         Invoke(nameof(ReloadEnemy), 1f);
     }
@@ -108,5 +105,22 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(true);
 
         InitializeEnemy();
+    }
+
+    IEnumerator WaitUnitilVFXComplete(VisualEffect vfx)
+    {
+        vfx.gameObject.SetActive(true);
+        vfx.Play();
+        yield return new WaitForSeconds(2f);
+        vfx.gameObject.SetActive(false);
+    }
+
+    IEnumerator waitAndDestroy(float delay)
+    {
+        yield return new WaitForSeconds(2f);
+                    Destroy(corruptionInstance);
+            Destroy(gameObject);
+            Destroy(gameObject.transform.parent.gameObject);
+
     }
 }
