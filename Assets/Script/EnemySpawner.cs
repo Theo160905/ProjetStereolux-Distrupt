@@ -68,7 +68,7 @@ public class EnemySpawner : MonoBehaviour
         newEnemy.GetComponent<RectTransform>().anchoredPosition = spawnPos;
 
         Enemy enemy = newEnemy.GetComponent<Enemy>();
-        enemy.OnDestroyed += HandleEnemyDestroyed;
+        //enemy.OnDestroyed += HandleEnemyDestroyed;
         activeEnemies.Add(enemy);
 
         enemiesSpawned++;

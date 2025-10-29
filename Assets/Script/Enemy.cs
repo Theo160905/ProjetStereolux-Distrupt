@@ -1,66 +1,58 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.UI;
-using UnityEngine.VFX;
 
+[RequireComponent(typeof(Button), typeof(Image))]
 public class Enemy : MonoBehaviour
 {
-    [Range(0.0f, 5.0f)]
-    public float TimeToBeInteractable = 2f;
+    [Header("Timings")]
+    [Range(0.0f, 5.0f)] public float TimeToBeInteractable = 2f;
+    public float lifespan = 1.5f;
 
-    public float lifespan = 7f;
-
-    public System.Action<Enemy> OnDestroyed;
-
+    [Header("References")]
     public GameObject corruptionInstance;
 
+    public VFXPool ObjectPoolVFX;
+
+    public event Action<Enemy> OnEnemyFinished;
+
     private float timer;
-    private bool isAlive = true;
+    private bool isAlive;
     private Button enemyButton;
     private Image buttonImage;
 
-    [Header("VFX")]
-    public VisualEffect SpawnVFX;
-    public VisualEffect DespawnVFX;
-    public VisualEffect HitVFX;
-    
+    void Awake()
+    {
+        ObjectPoolVFX = FindFirstObjectByType<VFXPool>();
 
-    void Start()
+        enemyButton = GetComponent<Button>();
+        buttonImage = GetComponent<Image>();
+        enemyButton.onClick.AddListener(OnTap);
+    }
+
+    void OnEnable()
     {
         InitializeEnemy();
     }
 
     void InitializeEnemy()
     {
-        enemyButton = GetComponent<Button>();
-        buttonImage = GetComponent<Image>();
-
-        if (enemyButton != null)
-        {
-            enemyButton.interactable = false;
-            Invoke(nameof(EnableInteraction), TimeToBeInteractable);
-        }
+        isAlive = true;
+        timer = 0f;
+        enemyButton.interactable = false;
+        buttonImage.color = Color.white;
 
         if (corruptionInstance != null)
-        {
             corruptionInstance.transform.position = transform.position;
-        }
 
-        timer = 0f;
-        isAlive = true;
+        StartCoroutine(MakeInteractableAfterDelay());
     }
 
-    void EnableInteraction()
+    IEnumerator MakeInteractableAfterDelay()
     {
-        if (enemyButton != null)
-        {
-            enemyButton.interactable = true;
-            StartCoroutine(WaitUnitilVFXComplete(SpawnVFX));
-
-            if (buttonImage != null)
-                buttonImage.color = new Color(0.5f, 0.75f, 1f);
-        }
+        yield return new WaitForSeconds(TimeToBeInteractable);
+        EnableInteraction();
     }
 
     void Update()
@@ -70,57 +62,32 @@ public class Enemy : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= lifespan)
         {
-            StartCoroutine(WaitUnitilVFXComplete(DespawnVFX));
-            ResetEnemy();
+            isAlive = false;
+            ObjectPoolVFX.Spawn("DespawnVFX", transform.position);
+            OnEnemyFinished?.Invoke(this);
+            InitializeEnemy();
         }
     }
 
-    public void OnTap()
+    public void EnableInteraction()
+    {
+        enemyButton.interactable = true;
+        buttonImage.color = new Color(0.5f, 0.75f, 1f);
+        ObjectPoolVFX.Spawn("SpawnVFX", transform.position);
+    }
+
+    void OnTap()
     {
         if (!isAlive) return;
-
         isAlive = false;
-        OnDestroyed?.Invoke(this);
+
+        ObjectPoolVFX.Spawn("HitVFX", transform.position);
 
         if (corruptionInstance != null)
-        {
-            StartCoroutine(WaitUnitilVFXComplete(HitVFX));
             Destroy(corruptionInstance);
-            Destroy(gameObject);
-            Destroy(gameObject.transform.parent.gameObject);
-        }
-            
 
-    }
+        OnEnemyFinished?.Invoke(this);
 
-    void ResetEnemy()
-    {
-        StartCoroutine(WaitUnitilVFXComplete(DespawnVFX));
-
-        Invoke(nameof(ReloadEnemy), 1f);
-    }
-
-    void ReloadEnemy()
-    {
-        gameObject.SetActive(true);
-
-        InitializeEnemy();
-    }
-
-    IEnumerator WaitUnitilVFXComplete(VisualEffect vfx)
-    {
-        vfx.gameObject.SetActive(true);
-        vfx.Play();
-        yield return new WaitForSeconds(2f);
-        vfx.gameObject.SetActive(false);
-    }
-
-    IEnumerator waitAndDestroy(float delay)
-    {
-        yield return new WaitForSeconds(2f);
-                    Destroy(corruptionInstance);
-            Destroy(gameObject);
-            Destroy(gameObject.transform.parent.gameObject);
-
+        Destroy(gameObject, 0.5f);
     }
 }
