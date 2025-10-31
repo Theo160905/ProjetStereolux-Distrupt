@@ -8,7 +8,7 @@ public class EnemyManager : MonoBehaviour
     public List<GameObject> enemyObjects;
 
     private List<Enemy> enemies = new();
-    private int currentEnemyIndex = -1;
+    private int currentEnemyIndex = 0;
 
     void Start()
     {
@@ -16,40 +16,51 @@ public class EnemyManager : MonoBehaviour
         {
             if (obj != null && obj.TryGetComponent(out Enemy enemy))
             {
+                enemy.enemyManager = this;
                 enemies.Add(enemy);
                 enemy.gameObject.SetActive(false);
-                enemy.OnEnemyFinished += HandleEnemyFinished;
             }
         }
 
         Shuffle(enemies);
-
         ActivateNextEnemy();
     }
 
-    void HandleEnemyFinished(Enemy enemy)
+    public void HandleEnemyFinished(Enemy enemy)
     {
+        Debug.Log($"Enemy détruit : {enemy.name}");
+        if (enemies.Contains(enemy))
+            enemies.Remove(enemy);
+
         StartCoroutine(NextEnemyAfterDelay(1f));
     }
 
-    IEnumerator NextEnemyAfterDelay(float delay)
+    public IEnumerator NextEnemyAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         ActivateNextEnemy();
     }
-
-    void ActivateNextEnemy()
+public void ActivateNextEnemy()
+{
+    if (enemies == null || enemies.Count == 0)
     {
-        currentEnemyIndex++;
-        if (currentEnemyIndex >= enemies.Count)
-        {
-            Debug.Log("Tous les ennemis ont été traités !");
-            return;
-        }
+        Debug.Log("Aucun ennemi dans la liste !");
+        return;
+    }
 
-        Enemy nextEnemy = enemies[currentEnemyIndex];
+    Enemy nextEnemy = enemies[currentEnemyIndex];
+    if (nextEnemy.gameObject.activeSelf)
+    {
+        nextEnemy.InitializeEnemy();
+    }
+    else
+    {
         nextEnemy.gameObject.SetActive(true);
     }
+    
+    currentEnemyIndex = (currentEnemyIndex + 1) % enemies.Count;
+}
+
 
     void Shuffle(List<Enemy> list)
     {

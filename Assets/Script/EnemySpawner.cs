@@ -12,7 +12,6 @@ public class EnemySpawner : MonoBehaviour
     [Tooltip("Distance minimale entre chaque ennemi en unités UI")]
     public float minDistanceBetweenEnemies = 50f;
 
-    [SerializeField] Contamination contamination;
 
     private float beatInterval;
     private float timer;
@@ -25,7 +24,6 @@ public class EnemySpawner : MonoBehaviour
 
     void Start()
     {
-        contamination.SetContamination(maxEnemiesToSpawn, enemyPrefab.GetComponent<Enemy>().lifespan);
         beatInterval = 60f / bpm;
     }
 

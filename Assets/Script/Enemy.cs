@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,10 +11,8 @@ public class Enemy : MonoBehaviour
 
     [Header("References")]
     public GameObject corruptionInstance;
-
     public VFXPool ObjectPoolVFX;
-
-    public event Action<Enemy> OnEnemyFinished;
+    public EnemyManager enemyManager;
 
     private float timer;
     private bool isAlive;
@@ -36,7 +33,7 @@ public class Enemy : MonoBehaviour
         InitializeEnemy();
     }
 
-    void InitializeEnemy()
+    public void InitializeEnemy()
     {
         isAlive = true;
         timer = 0f;
@@ -63,9 +60,7 @@ public class Enemy : MonoBehaviour
         if (timer >= lifespan)
         {
             isAlive = false;
-            ObjectPoolVFX.Spawn("DespawnVFX", transform.position);
-            OnEnemyFinished?.Invoke(this);
-            InitializeEnemy();
+            DisableInteraction();
         }
     }
 
@@ -74,6 +69,15 @@ public class Enemy : MonoBehaviour
         enemyButton.interactable = true;
         buttonImage.color = new Color(0.5f, 0.75f, 1f);
         ObjectPoolVFX.Spawn("SpawnVFX", transform.position);
+    }
+
+    public void DisableInteraction()
+    {
+        enemyButton.interactable = false;
+        buttonImage.color = Color.white;
+        ObjectPoolVFX.Spawn("DespawnVFX", transform.position);
+        enemyManager.ActivateNextEnemy();
+        //StartCoroutine(enemyManager.NextEnemyAfterDelay(1f));
     }
 
     void OnTap()
@@ -86,7 +90,7 @@ public class Enemy : MonoBehaviour
         if (corruptionInstance != null)
             Destroy(corruptionInstance);
 
-        OnEnemyFinished?.Invoke(this);
+        enemyManager.HandleEnemyFinished(this);
 
         Destroy(gameObject, 0.5f);
     }
