@@ -47,7 +47,7 @@ public void ActivateNextEnemy()
         Debug.Log("Aucun ennemi dans la liste !");
         return;
     }
-
+    currentEnemyIndex = (currentEnemyIndex + 1) % enemies.Count;
     Enemy nextEnemy = enemies[currentEnemyIndex];
     if (nextEnemy.gameObject.activeSelf)
     {
@@ -57,8 +57,6 @@ public void ActivateNextEnemy()
     {
         nextEnemy.gameObject.SetActive(true);
     }
-    
-    currentEnemyIndex = (currentEnemyIndex + 1) % enemies.Count;
 }
 
 
