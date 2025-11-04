@@ -1314,6 +1314,7 @@ MonoBehaviour:
   - {fileID: 1283431646}
   - {fileID: 1901407627}
   - {fileID: 1186347274}
+  book: {fileID: 1604019960}
 --- !u!1 &1110610837
 GameObject:
   m_ObjectHideFlags: 0

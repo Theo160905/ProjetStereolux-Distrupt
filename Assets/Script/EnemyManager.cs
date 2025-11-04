@@ -7,8 +7,11 @@ public class EnemyManager : MonoBehaviour
     [Header("Liste des ennemis")]
     public List<GameObject> enemyObjects;
 
+    public AutoFlip book;
+
     private List<Enemy> enemies = new();
     private int currentEnemyIndex = 0;
+
 
     void Start()
     {
@@ -45,6 +48,7 @@ public void ActivateNextEnemy()
     if (enemies == null || enemies.Count == 0)
     {
         Debug.Log("Aucun ennemi dans la liste !");
+        book.FlipRightPage();
         return;
     }
     currentEnemyIndex = (currentEnemyIndex + 1) % enemies.Count;
