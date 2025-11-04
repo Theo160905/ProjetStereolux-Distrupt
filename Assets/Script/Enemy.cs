@@ -1,71 +1,55 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
+[RequireComponent(typeof(Button), typeof(Image))]
 public class Enemy : MonoBehaviour
 {
-    [Range(0.0f, 5.0f)]
-    public float TimeToBeInteractable = 2f;
+    [Header("Timings")]
+    [Range(0.0f, 5.0f)] public float TimeToBeInteractable = 2f;
+    public float lifespan = 1.5f;
 
-    public float lifespan = 7f;
+    [Header("References")]
+    public GameObject corruptionInstance;
+    public VFXPool ObjectPoolVFX;
+    public EnemyManager enemyManager;
+
     private float timer;
-    private bool isAlive = true;
-
-    [SerializeField] Contamination contamination;
-
-    public System.Action<Enemy> OnDestroyed;
-
-    public GameObject CoruptionPrefab;
-    private GameObject corruptionInstance;
-
+    private bool isAlive;
     private Button enemyButton;
     private Image buttonImage;
 
-    void Start()
+    void Awake()
+    {
+        ObjectPoolVFX = FindFirstObjectByType<VFXPool>();
+
+        enemyButton = GetComponent<Button>();
+        buttonImage = GetComponent<Image>();
+        enemyButton.onClick.AddListener(OnTap);
+    }
+
+    void OnEnable()
     {
         InitializeEnemy();
     }
 
-    void InitializeEnemy()
+    public void InitializeEnemy()
     {
-        contamination = FindFirstObjectByType<Contamination>();
-
-        enemyButton = GetComponent<Button>();
-        buttonImage = GetComponent<Image>();
-
-        if (enemyButton != null)
-        {
-            enemyButton.interactable = false;
-            Invoke(nameof(EnableInteraction), TimeToBeInteractable);
-        }
-
-        GameObject Parent = GameObject.FindWithTag("Corruption");
-        if (Parent  != null && corruptionInstance == null)
-        {
-            corruptionInstance = Instantiate(CoruptionPrefab, Parent .transform);
-        }
-        else if (corruptionInstance == null)
-        {
-            corruptionInstance = Instantiate(CoruptionPrefab);
-        }
+        isAlive = true;
+        timer = 0f;
+        enemyButton.interactable = false;
+        buttonImage.color = Color.white;
 
         if (corruptionInstance != null)
-        {
             corruptionInstance.transform.position = transform.position;
-        }
 
-        timer = 0f;
-        isAlive = true;
+        StartCoroutine(MakeInteractableAfterDelay());
     }
 
-    void EnableInteraction()
+    IEnumerator MakeInteractableAfterDelay()
     {
-        if (enemyButton != null)
-        {
-            enemyButton.interactable = true;
-
-            if (buttonImage != null)
-                buttonImage.color = new Color(0.5f, 0.75f, 1f);
-        }
+        yield return new WaitForSeconds(TimeToBeInteractable);
+        EnableInteraction();
     }
 
     void Update()
@@ -75,38 +59,39 @@ public class Enemy : MonoBehaviour
         timer += Time.deltaTime;
         if (timer >= lifespan)
         {
-            contamination.IncreaseContamination(contamination.contaminationRate);
-            ResetEnemy();
+            isAlive = false;
+            DisableInteraction();
         }
     }
 
-    public void OnTap()
+    public void EnableInteraction()
+    {
+        enemyButton.interactable = true;
+        buttonImage.color = new Color(0.5f, 0.75f, 1f);
+        ObjectPoolVFX.Spawn("SpawnVFX", transform.position);
+    }
+
+    public void DisableInteraction()
+    {
+        enemyButton.interactable = false;
+        buttonImage.color = Color.white;
+        ObjectPoolVFX.Spawn("DespawnVFX", transform.position);
+        enemyManager.ActivateNextEnemy();
+        //StartCoroutine(enemyManager.NextEnemyAfterDelay(1f));
+    }
+
+    void OnTap()
     {
         if (!isAlive) return;
-
         isAlive = false;
-        OnDestroyed?.Invoke(this);
+
+        ObjectPoolVFX.Spawn("HitVFX", transform.position);
 
         if (corruptionInstance != null)
-        {
             Destroy(corruptionInstance);
-            Destroy(gameObject);
-        }
-            
 
-    }
+        enemyManager.HandleEnemyFinished(this);
 
-    void ResetEnemy()
-    {
-        gameObject.SetActive(false);
-
-        Invoke(nameof(ReloadEnemy), 1f);
-    }
-
-    void ReloadEnemy()
-    {
-        gameObject.SetActive(true);
-
-        InitializeEnemy();
+        Destroy(gameObject, 0.5f);
     }
 }
