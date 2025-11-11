@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,6 +15,10 @@ public class Enemy : MonoBehaviour
     public VFXPool ObjectPoolVFX;
     public EnemyManager enemyManager;
 
+    public List<GameObject> AppearanceImage;
+    public GameObject SpawnImage;
+
+
     private float timer;
     private bool isAlive;
     private Button enemyButton;
@@ -26,6 +31,12 @@ public class Enemy : MonoBehaviour
         enemyButton = GetComponent<Button>();
         buttonImage = GetComponent<Image>();
         enemyButton.onClick.AddListener(OnTap);
+
+        SpawnImage.SetActive(false);
+        for (int i = 0; i < AppearanceImage.Count; i++)
+        {
+            AppearanceImage[i].SetActive(false);
+        }
     }
 
     void OnEnable()
@@ -38,7 +49,11 @@ public class Enemy : MonoBehaviour
         isAlive = true;
         timer = 0f;
         enemyButton.interactable = false;
-        buttonImage.color = Color.white;
+        
+        for (int i = 0; i < AppearanceImage.Count; i++)
+        {
+            AppearanceImage[i].SetActive(true);
+        }
 
         if (corruptionInstance != null)
             corruptionInstance.transform.position = transform.position;
@@ -67,14 +82,18 @@ public class Enemy : MonoBehaviour
     public void EnableInteraction()
     {
         enemyButton.interactable = true;
-        buttonImage.color = new Color(0.5f, 0.75f, 1f);
+        SpawnImage.SetActive(true);
         ObjectPoolVFX.Spawn("SpawnVFX", transform.position);
     }
 
     public void DisableInteraction()
     {
         enemyButton.interactable = false;
-        buttonImage.color = Color.white;
+        SpawnImage.SetActive(false);
+        for (int i = 0; i < AppearanceImage.Count; i++)
+        {
+            AppearanceImage[i].SetActive(false);
+        }
         ObjectPoolVFX.Spawn("DespawnVFX", transform.position);
         enemyManager.ActivateNextEnemy();
         //StartCoroutine(enemyManager.NextEnemyAfterDelay(1f));
