@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 178e256245940304a96b860c011603f2
+guid: 7954b6e3e75befa448bf678b06f96b17
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Sneaky peak no hand_0
+      name: Sneaky peak rond_0
       rect:
         serializedVersion: 2
-        x: 11
-        y: 155
+        x: 134
+        y: 14
         width: 224
-        height: 153
+        height: 158
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -125,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ab4dd8c60bd51840bf95248c45f8a5c
-      internalID: 1020268313
+      spriteID: cd43c96dd49ecd149be066d159519258
+      internalID: -1783921327
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 1c66f4365b8a3eb47838788b21dc9975
     internalID: 0
     vertices: []
     indices: 
@@ -147,7 +147,7 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
-      Sneaky peak no hand_0: 1020268313
+      Sneaky peak rond_0: -1783921327
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

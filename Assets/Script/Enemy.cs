@@ -49,15 +49,12 @@ public class Enemy : MonoBehaviour
         isAlive = true;
         timer = 0f;
         enemyButton.interactable = false;
-        
+
         for (int i = 0; i < AppearanceImage.Count; i++)
         {
             AppearanceImage[i].SetActive(true);
         }
-
-        if (corruptionInstance != null)
-            corruptionInstance.transform.position = transform.position;
-
+        
         StartCoroutine(MakeInteractableAfterDelay());
     }
 
