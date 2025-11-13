@@ -18,6 +18,8 @@ public class Enemy : MonoBehaviour
     public List<GameObject> AppearanceImage;
     public GameObject SpawnImage;
 
+    public Sprite spriteHit;
+
 
     private float timer;
     private bool isAlive;
@@ -80,6 +82,7 @@ public class Enemy : MonoBehaviour
     {
         enemyButton.interactable = true;
         SpawnImage.SetActive(true);
+        SingletonSFX.Instance.PlaySound(SingletonSFX.Instance.SpawnSound, false);
         ObjectPoolVFX.Spawn("SpawnVFX", transform.position);
     }
 
@@ -100,14 +103,23 @@ public class Enemy : MonoBehaviour
     {
         if (!isAlive) return;
         isAlive = false;
+        enemyButton.interactable = false;
 
+        for (int i = 0; i < AppearanceImage.Count; i++)
+        {
+            AppearanceImage[i].SetActive(false);
+        }
+
+        SpawnImage.GetComponent<Image>().sprite = spriteHit;
+        
         ObjectPoolVFX.Spawn("HitVFX", transform.position);
+        SingletonSFX.Instance.PlaySound(SingletonSFX.Instance.HitSound, false);
 
         if (corruptionInstance != null)
             Destroy(corruptionInstance);
 
         enemyManager.HandleEnemyFinished(this);
 
-        Destroy(gameObject, 0.5f);
+        Destroy(gameObject, 1.5f);
     }
 }

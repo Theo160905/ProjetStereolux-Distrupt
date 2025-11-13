@@ -158,6 +158,7 @@ MonoBehaviour:
   - {fileID: 2098260627760779849}
   - {fileID: 4960303982820943415}
   SpawnImage: {fileID: 8957072371087642695}
+  spriteHit: {fileID: -1405023259, guid: 4c782219ff0d9aa4cb41d8ba6482a864, type: 3}
 --- !u!95 &7771052703306485830
 Animator:
   serializedVersion: 7
