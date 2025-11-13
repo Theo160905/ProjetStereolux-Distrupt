@@ -309,34 +309,45 @@ public class Book : MonoBehaviour {
         DragRightPageToPoint(transformPoint(Input.mousePosition));
         
     }
-    public void DragLeftPageToPoint(Vector3 point)
-    {
-        if (currentPage <= 0) return;
-        pageDragging = true;
-        mode = FlipMode.LeftToRight;
-        f = point;
+public void DragLeftPageToPoint(Vector3 point)
+{
+    if (currentPage <= 0) return;
+    pageDragging = true;
+    mode = FlipMode.LeftToRight;
+    f = point;
 
-        NextPageClip.rectTransform.pivot = new Vector2(1, 0.12f);
-        ClippingPlane.rectTransform.pivot = new Vector2(0, 0.35f);
+    NextPageClip.rectTransform.pivot = new Vector2(1, 0.12f);
+    ClippingPlane.rectTransform.pivot = new Vector2(0, 0.35f);
 
-        Right.gameObject.SetActive(true);
-        Right.transform.position = LeftNext.transform.position;
-        Right.sprite = bookPages[currentPage - 1];
-        Right.transform.eulerAngles = new Vector3(0, 0, 0);
-        Right.transform.SetAsFirstSibling();
+    Right.gameObject.SetActive(true);
+    Right.transform.position = LeftNext.transform.position;
+    Right.transform.eulerAngles = Vector3.zero;
+    Right.transform.SetAsFirstSibling();
+    Right.sprite = (currentPage - 1 >= 0 && currentPage - 1 < bookPages.Length)
+        ? bookPages[currentPage - 1]
+        : background;
 
-        Left.gameObject.SetActive(true);
-        Left.rectTransform.pivot = new Vector2(1, 0);
-        Left.transform.position = LeftNext.transform.position;
-        Left.transform.eulerAngles = new Vector3(0, 0, 0);
-        Left.sprite = (currentPage >= 2) ? bookPages[currentPage - 2] : background;
+    Left.gameObject.SetActive(true);
+    Left.rectTransform.pivot = new Vector2(1, 0);
+    Left.transform.position = LeftNext.transform.position;
+    Left.transform.eulerAngles = Vector3.zero;
+    Left.sprite = (currentPage - 2 >= 0 && currentPage - 2 < bookPages.Length)
+        ? bookPages[currentPage - 2]
+        : background;
 
-        LeftNext.sprite = (currentPage >= 3) ? bookPages[currentPage - 3] : background;
+    LeftNext.sprite = (currentPage - 3 >= 0 && currentPage - 3 < bookPages.Length)
+        ? bookPages[currentPage - 3]
+        : background;
 
-        RightNext.transform.SetAsFirstSibling();
-        if (enableShadowEffect) ShadowLTR.gameObject.SetActive(true);
-        UpdateBookLTRToPoint(f);
-    }
+    RightNext.transform.SetAsFirstSibling();
+
+    if (enableShadowEffect)
+        ShadowLTR.gameObject.SetActive(true);
+
+    UpdateBookLTRToPoint(f);
+}
+
+    
     public void OnMouseDragLeftPage()
     {
         if (interactable)
