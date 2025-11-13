@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 9195241798846705012}
   - component: {fileID: 3470614930378538411}
   - component: {fileID: 188940259341595200}
-  - component: {fileID: 5897086200611494739}
+  - component: {fileID: 4890790174827668667}
   m_Layer: 5
   m_Name: CoruptionZone
   m_TagString: Untagged
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &5897086200611494739
+--- !u!114 &4890790174827668667
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -85,6 +85,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 5223486099816588446}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28c1fe0e705e0734589424fd807afbb0, type: 3}
+  m_Script: {fileID: 11500000, guid: 09cd0a338e5e27c448ea4b6022bdd05b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Corruption
+  m_EditorClassIdentifier: Assembly-CSharp::CoruptionApear
