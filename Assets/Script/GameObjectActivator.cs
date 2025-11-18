@@ -6,6 +6,7 @@ public class GameObjectActivator : MonoBehaviour
 {
 
     [SerializeField] private List<GameObject> objectsList = new List<GameObject>();
+
     private float activationDelay = 1f;
 
     private int currentIndex = 0;
